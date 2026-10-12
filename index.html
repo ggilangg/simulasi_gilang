@@ -2,6 +2,14 @@
 <html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Simulator Kredit Mobil</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0f6b5c">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sim Kredit">
 <style>
 :root{--bg:#f3f5f7;--card:#fff;--tx:#14202b;--mu:#5d6b78;--bd:#dde3e9;--ac:#0f6b5c;--ac2:#e3f2ee;--wb:#fff4e5;--wa:#9a4a0a;--er:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1419;--card:#172028;--tx:#e8eef3;--mu:#92a1ae;--bd:#27333d;--ac:#2f9e88;--ac2:#13302b;--wb:#3a2a14;--wa:#f0a35e;--er:#ff8a80}}
@@ -41,7 +49,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:8px 3px;b
 .chips button:disabled{opacity:1}
 .ck{display:flex;align-items:center;gap:12px;min-height:48px;margin:10px 0 0;font-size:16px;color:var(--tx)}.ck input{width:26px;height:26px;min-height:0;accent-color:var(--ac)}
 </style></head><body>
-<header><b>🚗 Simulator Kredit</b><button id="th" aria-label="Ganti tema">◐</button></header>
+<header><b>🏎️ Simulator Kredit</b><span><button id="inst" class="hide" type="button">📲 Pasang</button> <button id="th" aria-label="Ganti tema">◐</button></span></header>
 <div class="chips" id="simsw" style="max-width:560px;margin:4px auto 0;padding:0 12px"><button type="button" class="on" data-s="K">Konvensional &amp; Hybrid</button><button type="button" data-s="E">EV</button></div>
 <main>
 <section id="p_calc">
@@ -271,4 +279,9 @@ refreshE();
 async function init(){await loadCfg();await loadH();try{if(window.claude&&claude.use){DB=await claude.use("db");if(DB){const u=await claude.use("user");if(u&&u.id)UID=await u.id()}}}catch(e){DB=null}
  if(DB){await loadCfg();await loadH()}hr()}
 fillJ();fillR();refresh();init();
+let DEFER=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();DEFER=e;$("inst").classList.remove("hide")});
+$("inst").onclick=async()=>{if(!DEFER)return;DEFER.prompt();try{await DEFER.userChoice}catch(e){}DEFER=null;$("inst").classList.add("hide")};
+window.addEventListener("appinstalled",()=>{$("inst").classList.add("hide");toast("Aplikasi terpasang ✓")});
+if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script></body></html>
